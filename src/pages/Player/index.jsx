@@ -2,19 +2,30 @@ import { useParams } from "react-router-dom";
 import Banner from "../../components/Banner";
 import Titulo from "../../components/Titulo";
 import styles from "./Player.module.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { VideosContext } from "../../context/VideosContext";
 
 const Player = () => {
-  const [video, setVideo] = useState([]);
-  const parametros = useParams();
+  const [video, setVideo] = useState(null);
+  const { videos } = useContext(VideosContext);
+  const { id } = useParams();
 
   useEffect(() => {
-    fetch(`https://my-json-server.typicode.com/Nawsacul/cinetag-api/videos?id=${parametros.id}`)
-    .then(resposta => resposta.json())
-    .then(dados => {
-      setVideo(...dados)
-    })
-  }, [])
+    const videoEncontrado = videos.find(video => video.id.toString() === id);
+    setVideo(videoEncontrado);
+  }, [id, videos])
+
+  if(!video) {
+    return <h2>Video não encontrado...</h2>
+  }
+
+  // useEffect(() => {
+  //   fetch(`https://my-json-server.typicode.com/Nawsacul/cinetag-api/videos?id=${parametros.id}`)
+  //   .then(resposta => resposta.json())
+  //   .then(dados => {
+  //     setVideo(...dados)
+  //   })
+  // }, [])
 
   return (
     <>
